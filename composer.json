@@ -1,8 +1,9 @@
 {
     "name": "zucchi/security",
-    "description": "Module to allow management of security options for Zucchi ZF2 Modules",
+    "description": "Module to provide and allow management of security features for Zucchi ZF2 Modules",
     "type": "library",
     "keywords": [
+        "zucchi",
         "security",
         "zf2"
     ],
@@ -17,7 +18,6 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-master",
-        "doctrine/doctrine-module": "dev-master",
         "zucchi/zucchi": "dev-master",
         "zucchi/admin": "dev-master"
     },
