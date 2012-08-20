@@ -1,0 +1,32 @@
+{
+    "name": "zucchi/security",
+    "description": "Module to allow management of security options for Zucchi ZF2 Modules",
+    "type": "library",
+    "keywords": [
+        "security",
+        "zf2"
+    ],
+    "homepage": "https://github.com/zucchi/ZucchiPages",
+    "authors" : [{
+        "name": "Matt Cockayne",
+        "email" : "matt@zucchi.co.uk",
+        "homepage" : "http://devincharge.com/"
+    }],
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "dev-master",
+        "doctrine/doctrine-module": "dev-master",
+        "zucchi/zucchi": "dev-master",
+        "zucchi/admin": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "ZucchiSecurity": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
