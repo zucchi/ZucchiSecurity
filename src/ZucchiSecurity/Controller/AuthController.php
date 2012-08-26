@@ -10,6 +10,7 @@
 namespace ZucchiSecurity\Controller;
 
 use ZucchiAdmin\Controller\AbstractAdminController;
+use ZucchiSecurity\Form\Auth;
 use Zucchi\Debug\Debug;
 
 /**
@@ -26,8 +27,27 @@ class AuthController extends AbstractAdminController
      * (non-PHPdoc)
      * @see \Zucchi\Controller\AbstractController::getList()
      */
-    public function getList()
+    public function settingsAction()
     {
+        $sm = $this->getServiceLocator();
+        $config = $sm->get('config');
+
+        $path = $config['ZucchiSecurity']['config_paths']['auth'];
         
+        $form = new Auth();
+        
+        return array(
+            'form' => $form,
+        );
+    }
+    
+    public function create($data)
+    {
+        exit('create');
+    }
+    
+    public function update($id, $data)
+    {
+        exit('update');
     }
 }

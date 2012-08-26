@@ -5,4 +5,5 @@ return array(
     'ZucchiSecurity\Controller\AdminController'      => __DIR__ . '/src/ZucchiSecurity/Controller/AdminController.php',
     'ZucchiSecurity\Controller\AuthController'      => __DIR__ . '/src/ZucchiSecurity/Controller/AuthController.php',
     'ZucchiSecurity\Controller\AcccessController'      => __DIR__ . '/src/ZucchiSecurity/Controller/AccessController.php',
+    'ZucchiSecurity\Form\Auth' => __DIR__ . '/src/ZucchiSecurity/Form/Auth.php',
 );
