@@ -100,7 +100,7 @@ class SecurityListener  implements
             $shared->attach(
                 'ZucchiSecurity',
                 SecurityEvent::EVENT_AUTHENTICATE, 
-                array($this, 'authenticateLocal')
+                array($this, 'doLocalAuthentication')
             ),
             $shared->attach(
                 'ZucchiSecurity',
@@ -225,7 +225,7 @@ class SecurityListener  implements
     }
     
     /**
-     * test for ability to perform action within a module
+     * test if privilege possible against module for current request
      * 
      * @param MvcEvent $event
      */
@@ -240,37 +240,39 @@ class SecurityListener  implements
             $request = $event->getRequest();
 
             $permService = $sm->get('zucchisecurity.perm');
-            $config = $sm->get('zucchisecurity.perm.options');
             
-            $map = $config->getMap();
-            
-            $action = $routeMatch->getParam('action', false);
-            if (!$action) {
-                $action = strtolower($request->getMethod());
-            }
-            
-            
-            
-            if (isset($map[$module][$action])) {
-                $privilege = $map[$module][$action];
-            } else if (isset($map['defaults'][$action])) {
-                $privilege = $map['defaults'][$action];
-            } else {
-                $privilege = $action;
-            } 
-            
-            if (!$permService->can($privilege, 'module:' . $module)) {
-                $event->setError('error-unauthorised')
-                  ->setParam('type', 'route')
-                  ->setParam('resource', $module)
-                  ->setParam('privilege', $privilege);
-
-                $app->getEventManager()
-                    ->trigger('dispatch.error', $event);
-exit('denied');
+            // if the module has been registered in the acl the test
+            if ($permService->getAcl()->hasResource('module:' . $module)) {
+                $config = $sm->get('zucchisecurity.perm.options');
+                
+                $map = $config->getMap();
+                
+                $action = $routeMatch->getParam('action', false);
+                if (!$action) {
+                    $action = strtolower($request->getMethod());
+                }
+                
+                
+                
+                if (isset($map[$module][$action])) {
+                    $privilege = $map[$module][$action];
+                } else if (isset($map['defaults'][$action])) {
+                    $privilege = $map['defaults'][$action];
+                } else {
+                    $privilege = $action;
+                } 
+                
+                if (!$permService->can($privilege, 'module:' . $module)) {
+                    $event->setError('error-unauthorised')
+                      ->setParam('type', 'route')
+                      ->setParam('resource', $module)
+                      ->setParam('privilege', $privilege);
+    
+                    $app->getEventManager()
+                        ->trigger('dispatch.error', $event);
+                }
             }
         }
-//         exit('authoriseModule');
     }
     
     /**
@@ -332,7 +334,7 @@ exit('denied');
      * 
      * @param MvcEvent $event
      */
-    public function authenticateLocal(SecurityEvent $event)
+    public function doLocalAuthentication(SecurityEvent $event)
     {   
         $app = $event->getTarget();
         $sm = $app->getServiceManager();

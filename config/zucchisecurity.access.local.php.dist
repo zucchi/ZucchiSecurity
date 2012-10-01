@@ -1,25 +1,54 @@
 <?php
+/**
+ * This is a template of the setting used to manipulate your security settings
+ */
 return array(
     'ZucchiSecurity' => array(
         'permissions' => array(
             /**
+             * map of module specific HTTP methods/controller actions to privileges
+             *  
+             * 'map' => array(
+             *     'defaults' => array(
+             *         'post' => 'create',
+             *         'get' => 'read',
+             *         'put' => 'update',
+             *         'delete' => 'delete',
+             *     ),
+             *     'ZucchiModule' => array(
+             *         'list' => 'read',
+             *         'export' => 'read',
+             *     ),
+             * ),
+             */
+            'map' => array(),
+            
+            /**
              * definition of roles available, flat structure allow multiple inheritance
+             *
+             * 'roles' => array (
+             *     my-role' => array(
+             *         'label' => 'Description of My-Role',
+             *     ),
+             *     another-role' => array(
+             *         'label' => 'Description of Another-Role',
+             *         'parents'=>array('my-role')
+             *     ),
+             * ),
              */
             'roles' =>array(),
 
             /**
-             * Definition of privileges available
-             * 
-             * 'resources' => array(
-             *     'ZucchiAdmin' => array(
-             *         'create', 'read', 'update', 'delete', 'export'
-             *      ),
-             * ),
-             */
-            'privileges' => array(),
-        
-            /**
              * Definition of the different resources available
+             *
+             * 'resources' => array(
+             *      'route' =>array(
+             *          'MyModuleRouteKey',
+             *      ),
+             *      'module' => array(
+             *          'MyModuleName',
+             *      ),
+             *  ),
              */
             'resources' => array(),
             
@@ -27,10 +56,17 @@ return array(
              * Hardcoded rules to create for an acl
              * 
              * 'rules' => array(
-             *     'admin' => array(
-             *          'module:ZucchiAdmin' => array('read'),
-             *          'route:ZucchiAdmin' => array('read'),
-             *      )
+             *     array(
+             *        'action' => 'allow',
+             *        'role' => 'role-key',
+             *        'resource' => array(
+             *             'route:ZucchiAdmin/ZucchiModule',
+             *             'module:ZucchiModule',
+             *         ),
+             *         'privileges' => array(
+             *             'view', 'create', 'update', 'delete', 'export',
+             *         ),
+             *     ),
              * ), 
              */
             'rules' => array(),
