@@ -10,8 +10,8 @@
     "homepage": "https://github.com/zucchi/ZucchiPages",
     "authors" : [{
         "name": "Matt Cockayne",
-        "email" : "matt@zucchi.co.uk",
-        "homepage" : "http://devincharge.com/"
+        "email": "matt@zucchi.co.uk",
+        "homepage": "http://devincharge.com/"
     }],
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
@@ -19,8 +19,13 @@
         "php": ">=5.4.1",
         "zendframework/zendframework": "dev-master",
         "zucchi/zucchi": "dev-master",
-        "zucchi/admin": "dev-master"
+        "zucchi/admin": "dev-master",
+        "zucchi/doctrine" : "dev-master",
+        "zucchi/user": "dev-master"
     },
+    "suggest": {
+        "zendframework/zendservice-recaptcha": "Recaptcha service for use with Recaptcha Plugin"
+    }
     "autoload": {
         "psr-0": {
             "ZucchiSecurity": "src/"

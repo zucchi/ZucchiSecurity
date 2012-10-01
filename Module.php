@@ -1,19 +1,44 @@
 <?php
 /**
- * Zucchi (http://zucchi.co.uk/)
+ * ZucchiSecurity (http://zucchi.co.uk/)
  *
- * @link      http://github.com/zendframework/ZendSkeletonModule for the canonical source repository
+ * @link      http://github.com/zucchi/ZucchiSecurity for the canonical source repository
  * @copyright Copyright (c) 2005-2012 Zucchi Limited (http://zucchi.co.uk)
  * @license   http://zucchi.co.uk/legals/bsd-license New BSD License
  */
 
 namespace ZucchiSecurity;
 
+use Zend\ModuleManager\ModuleManager;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\Mvc\ModuleRouteListener;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\EventManager\EventInterface;
+use ZucchiSecurity\Event\SecurityListener;
+use Zucchi\Debug\Debug;
 
-class Module implements AutoloaderProviderInterface
+/**
+ * Secufity Features
+ * @author Matt Cockayne <matt@zucchi.co.uk>
+ * @package ZucchiSecurity
+ * @subpackage Module
+ */
+class Module implements 
+    AutoloaderProviderInterface,
+    ConfigProviderInterface
 {
+    public function init(ModuleManager $moduleManager)
+    {
+        $em = $moduleManager->getEventManager();
+        $listener = new SecurityListener();
+        $listener->attach($em);
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see \Zend\ModuleManager\Feature\AutoloaderProviderInterface::getAutoloaderConfig()
+     */
     public function getAutoloaderConfig()
     {
         return array(
@@ -31,14 +56,5 @@ class Module implements AutoloaderProviderInterface
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
-    }
-    
-    public function onBootstrap($e)
-    {
-        // You may not need to do this if you're doing it elsewhere in your
-        // application
-        $eventManager        = $e->getApplication()->getEventManager();
-        $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
     }
 }

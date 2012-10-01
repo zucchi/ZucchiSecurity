@@ -1,0 +1,33 @@
+<?php
+return array(
+    'ZucchiSecurity' => array(
+        'auth_plugins' =>array(
+            'local' => array(
+                /**
+                 * Entity to authenticate with
+                 */
+                'entity' => 'ZucchiUser\Entity\User',
+                
+                /**
+                 * field to use for the entities identity
+                 */
+                'identityFields' => array('identity'),
+            
+                /**
+                 * allow locked entities to authenticate
+                 */
+                'allowLocked' => false,
+            ),
+            'captcha' => array(
+                /**
+                 * Is captcha enabled on security forms
+                 */
+                'enabled' => false,
+                /**
+                 * type of captcha adapter to use
+                 */
+                'adapter' => 'dumb',
+            ),
+        ),
+    ),
+);

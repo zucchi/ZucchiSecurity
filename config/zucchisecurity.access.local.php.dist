@@ -1,0 +1,39 @@
+<?php
+return array(
+    'ZucchiSecurity' => array(
+        'permissions' => array(
+            /**
+             * definition of roles available, flat structure allow multiple inheritance
+             */
+            'roles' =>array(),
+
+            /**
+             * Definition of privileges available
+             * 
+             * 'resources' => array(
+             *     'ZucchiAdmin' => array(
+             *         'create', 'read', 'update', 'delete', 'export'
+             *      ),
+             * ),
+             */
+            'privileges' => array(),
+        
+            /**
+             * Definition of the different resources available
+             */
+            'resources' => array(),
+            
+            /**
+             * Hardcoded rules to create for an acl
+             * 
+             * 'rules' => array(
+             *     'admin' => array(
+             *          'module:ZucchiAdmin' => array('read'),
+             *          'route:ZucchiAdmin' => array('read'),
+             *      )
+             * ), 
+             */
+            'rules' => array(),
+        ),
+    ),
+);

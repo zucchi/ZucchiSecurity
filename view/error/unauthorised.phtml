@@ -1,0 +1,12 @@
+<?=$this->bootstrapAlert(
+    $this->tranzlate('In order to perform this action you must log-in as a user with the appropriate privileges'),
+    'error', 
+    $this->tranzlate(
+        'You are not authorised to %1$s the %2$s "%3$s"', 
+        $privilege, 
+        $type, 
+        $resource
+    ),
+    false
+);?>
+<?=$this->loginForm()?>

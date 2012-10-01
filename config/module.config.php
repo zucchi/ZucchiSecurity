@@ -1,18 +1,76 @@
 <?php
 return array(
-    'ZucchiSecurity' => array(
-        'config_paths' => array(
-            'auth' => __DIR__ . '/auth.config.php',
-            'access' => __DIR__ . '/access.config.php',
-        ),
-        'auth' => include 'auth.config.php',
-        'access' => include 'access.config.php',
-    ),
     'controllers' => array(
         'invokables' => array(
             'zucchi-security-admin' => 'ZucchiSecurity\Controller\AdminController',
             'zucchi-security-auth' => 'ZucchiSecurity\Controller\AuthController',
             'zucchi-security-access' => 'ZucchiSecurity\Controller\AccessController',
+            'zucchi-security-frontend' => 'ZucchiSecurity\Controller\FrontendController',
+        ),
+    ),
+    'controller_plugins' => array(
+        'invokables' => array(
+            'Identity' => 'ZucchiSecurity\Controller\Plugin\Identity',
+        ),
+    ),
+    'service_manager' => array(
+        'invokables' => array(
+            'zucchisecurity.auth' => 'ZucchiSecurity\Authentication\Service',
+            'zucchisecurity.listener' => 'ZucchiSecurity\Event\SecurityListener',
+        ),
+        'factories' => array(
+            'zucchisecurity.perm.options' => function ($sm) {
+                $config = $sm->get('config');
+                $options = new \ZucchiSecurity\Permissions\Options\PermissionsOptions();
+                if (isset($config['ZucchiSecurity']['permissions'])) {
+                    $options->setFromArray($config['ZucchiSecurity']['permissions']);
+                }
+                return $options;
+            },
+            'zucchisecurity.perm' => function ($sm) {
+                $service = new ZucchiSecurity\Permissions\Service();
+                $service->setOptions($sm->get('zucchisecurity.perm.options'));
+                return $service;
+            },
+            'zucchisecurity.auth.local.options' => function ($sm) {
+                $config = $sm->get('config');
+                $options = new \ZucchiSecurity\Authentication\Plugin\Options\LocalOptions();
+                if (isset($config['ZucchiSecurity']['auth_plugins']['local'])) {
+                    $options->setFromArray($config['ZucchiSecurity']['auth_plugins']['local']);
+                }
+                return $options;
+            },
+            'zucchisecurity.auth.local' => function ($sm) {
+                $plugin = new ZucchiSecurity\Authentication\Plugin\Local();
+                $plugin->setOptions($sm->get('zucchisecurity.auth.local.options'));
+                return $plugin;
+            },
+            'zucchisecurity.auth.captcha.options' => function ($sm) {
+                $config = $sm->get('config');
+                $options = new \ZucchiSecurity\Authentication\Plugin\Options\CaptchaOptions();
+                if (isset($config['ZucchiSecurity']['auth_plugins']['captcha'])) {
+                    $options->setFromArray($config['ZucchiSecurity']['auth_plugins']['captcha']);
+                }
+                return $options;
+            },
+            'zucchisecurity.view.strategy.unauthorised' => function ($sm) {
+                $config = $sm->get('config');
+                $strategy = new \ZucchiSecurity\View\Strategy\Unauthorised();
+                return $strategy;
+            },
+        ),
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'Identity' => 'ZucchiSecurity\View\Helper\Identity',
+            'Can' => 'ZucchiSecurity\View\Helper\Can',
+        ),
+        'factories' => array(
+            'loginform' => function($sm) {
+                $sl = $sm->getServiceLocator();
+                $helper = new ZucchiSecurity\View\Helper\LoginForm($sl->get('zucchisecurity.auth'));
+                return $helper;
+            }
         ),
     ),
     'navigation' => array(
@@ -20,24 +78,21 @@ return array(
             'security' => array(
                 'label' => _('Security'),
                 'route' => 'ZucchiAdmin/ZucchiSecurity',
-                'pages' => array(
-                    'authentication' => array(
-                        'label' => _('Authentication'),
-                        'route' => 'ZucchiAdmin/ZucchiSecurity/Auth',
-                        'controller' => 'auth',
-                    ),
-                    'access' => array(
-                        'label' => _('Access Control'),
-                        'route' => 'ZucchiAdmin/ZucchiSecurity/Access',
-                        'controller' => 'access',
-                    ),
-                )
             ),
         )
     ),
     // default route 
     'router' => array(
         'routes' => array(
+            'ZucchiSecurity' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route' => '/security[/:action]',
+                    'defaults' => array(
+                        'controller' => 'zucchi-security-frontend',
+                    )
+                ),
+            ),
             'ZucchiAdmin' => array(
                 'child_routes' => array(
                     'ZucchiSecurity' => array(
@@ -49,30 +104,6 @@ return array(
                             )
                         ),
                         'may_terminate' => true,
-                        'child_routes' => array(
-                            'Auth' => array(
-                                'type'    => 'Segment',
-                                'options' => array(
-                                    'route' => '/auth[/:action]',
-                                    'defaults' => array(
-                                        'controller' => 'zucchi-security-auth',
-                                        'action' => 'settings',
-                                    )
-                                ),
-                                'may_terminate' => true,
-                            ),
-                            'Access' => array(
-                                'type'    => 'Segment',
-                                'options' => array(
-                                    'route' => '/access[/:action]',
-                                    'defaults' => array(
-                                        'controller' => 'zucchi-security-access',
-                                        'action' => 'settings',
-                                    )
-                                ),
-                                'may_terminate' => true,
-                            ),
-                        )
                     ),
                 ),
             ),
@@ -91,6 +122,31 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'ZucchiSecurity' => __DIR__ . '/../view',
+        ),
+    ),
+    'ZucchiSecurity' => array(
+        'permissions' => array(
+            'map' => array(
+                'defaults' => array(
+                    'post' => 'create',
+                    'get' => 'read',
+                    'put' => 'update',
+                    'delete' => 'delete',
+                ),
+            ),
+            'roles' => array(
+                'guest' => array(
+                    'label' => 'Guest Role (default role, grants public access)',
+                ),
+            ),
+            'resources' => array(
+                'route' =>array(
+                    'ZucchiAdmin' => array(
+                        'children' => array('ZucchiSecurity'),
+                    ),
+                ),
+            ),
+            'rules' => array(),
         ),
     ),
 );
