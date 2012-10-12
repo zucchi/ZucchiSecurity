@@ -1,14 +1,17 @@
-**ZucchiSecurity**
+ZucchiSecurity
+==============
 
 Module to provide and allow management of security features for Zucchi ZF2 Modules 
 
-*Installation*
+Installation
+------------
 
 From the root of your ZF2 Skeleton Application run
 
     ./composer.phar require zucchi/security
     
-**Authorisation**
+Authorisation
+-------------
 
 This module comes with an authorisation layer built on top of Zend\Permissions\Acl.
 
@@ -22,7 +25,9 @@ On each request it will test the ACL to see if the curent user has access to the
 If the current user is not authorised it will trigger the unauthorised view 
 strategy and display the login/logout forms.
 
-*Helpers*
+Helpers
+-------
+
 As part of the module you have a both a view and controller helper. "$this->can(privilege, $resource)"
 proxies to the permissions service method "can($privilege, $resource)"
 
@@ -30,7 +35,8 @@ proxies to the permissions service method "can($privilege, $resource)"
 
 Tests the ACL to see if any of the roles assigned to the current user allows the edit permission against the module ZucchiUser.
 
-*Configuration*
+Configuration
+-------------
 
 When adding a module to your project it will need to be registered with the 
 ZucchiSecurity Module.
@@ -60,7 +66,8 @@ You can do this by adding the following (as a bare minimum) to your configuratio
 Full details of the different options for configuration can be found in 
 ./config/zucchisecurity.access.local.php.dist
 
-**Authentication**
+Authentication
+--------------
 
 The module comes with a built in Authentication layer that will be triggered 
 when the current user is not authorised to view the current route.
