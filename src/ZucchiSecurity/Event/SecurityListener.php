@@ -211,16 +211,16 @@ class SecurityListener  implements
         $permsService = $sm->get('zucchisecurity.perm');
         $rm = $event->getRouteMatch()->getMatchedRouteName();
 
-        if (!$permsService->can('view', 'route:' . $rm)) {
-            $event->setError('error-unauthorised')
-                  ->setParam('type', 'route')
-                  ->setParam('resource', $rm)
-                  ->setParam('privilege', 'view');
-
-            $app->getEventManager()
-                ->trigger('dispatch.error', $event);
-            
-
+        if ($permsService->getAcl()->hasResource('route:' . $rm)) {
+            if (!$permsService->can('view', 'route:' . $rm)) {
+                $event->setError('error-unauthorised')
+                      ->setParam('type', 'route')
+                      ->setParam('resource', $rm)
+                      ->setParam('privilege', 'view');
+    
+                $app->getEventManager()
+                    ->trigger('dispatch.error', $event);
+            }
         }
     }
     

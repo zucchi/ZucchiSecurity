@@ -13,6 +13,9 @@ use Zend\EventManager\EventInterface;
 
 use Doctrine\ORM\EntityManager;
 
+use ZucchiDoctrine\EntityManager\EntityManagerAwareInterface;
+use ZucchiDoctrine\EntityManager\EntityManagerAwareTrait;
+
 use ZucchiSecurity\Entity\AuthenticatableInterface;
 use ZucchiSecurity\Form\Login as LoginForm;
 use ZucchiSecurity\Authentication\Result;
@@ -29,13 +32,12 @@ use Zucchi\Debug\Debug;
  * @subpackage Auth  
  * @category Plugin
  */
-class Local extends AbstractPlugin implements PluginInterface
+class Local extends AbstractPlugin implements
+    PluginInterface,
+    EntityManagerAwareInterface
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-    
+    use EntityManagerAwareTrait;
+
     /**
      * Authenticate the request & form
      * @param unknown_type $request
@@ -91,25 +93,6 @@ class Local extends AbstractPlugin implements PluginInterface
         return $result;
     }
     
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-    
-    /**
-     * @return EntityManager
-     */
-    public function getEntityManager()
-    {
-        if (!$this->entityManager) {
-            $this->entityManager = $this->getServiceManager()->get('doctrine.entitymanager.orm_default');
-        }
-        return $this->entityManager;
-    }
-
     /**
      * build a Doctrine Query required to authenticate
      *  
