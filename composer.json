@@ -25,7 +25,7 @@
     },
     "suggest": {
         "zendframework/zendservice-recaptcha": "Recaptcha service for use with Recaptcha Plugin"
-    }
+    },  
     "autoload": {
         "psr-0": {
             "ZucchiSecurity": "src/"
