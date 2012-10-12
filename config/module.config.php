@@ -2,9 +2,6 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'zucchi-security-admin' => 'ZucchiSecurity\Controller\AdminController',
-            'zucchi-security-auth' => 'ZucchiSecurity\Controller\AuthController',
-            'zucchi-security-access' => 'ZucchiSecurity\Controller\AccessController',
             'zucchi-security-frontend' => 'ZucchiSecurity\Controller\FrontendController',
         ),
     ),
@@ -73,15 +70,7 @@ return array(
             }
         ),
     ),
-    'navigation' => array(
-        'ZucchiAdmin' => array(
-            'security' => array(
-                'label' => _('Security'),
-                'route' => 'ZucchiAdmin/ZucchiSecurity',
-            ),
-        )
-    ),
-    // default route 
+    // default route
     'router' => array(
         'routes' => array(
             'ZucchiSecurity' => array(
@@ -91,20 +80,6 @@ return array(
                     'defaults' => array(
                         'controller' => 'zucchi-security-frontend',
                     )
-                ),
-            ),
-            'ZucchiAdmin' => array(
-                'child_routes' => array(
-                    'ZucchiSecurity' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route' => '/security',
-                            'defaults' => array(
-                                'controller' => 'zucchi-security-admin',
-                            )
-                        ),
-                        'may_terminate' => true,
-                    ),
                 ),
             ),
         ),

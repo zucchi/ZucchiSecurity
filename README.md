@@ -107,4 +107,7 @@ This event allows you to hook into the result of your authentication.
 A good example of this can be found in the ZucchiUser module which hooks into 
 this event and creates a log of the successful
 
+Roadmap
+-------
 
+*   Implement Registration features
