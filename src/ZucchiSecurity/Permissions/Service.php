@@ -155,7 +155,10 @@ class Service extends AbstractService implements
             foreach ($parents AS $parent) {
                 $this->addRole($parent);
             }
-            $this->acl->addRole($role, $parents);
+
+            if ($role) {
+                $this->acl->addRole($role, $parents);
+            }
         }
     }
     
