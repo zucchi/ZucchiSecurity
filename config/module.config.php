@@ -60,14 +60,18 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'Identity' => 'ZucchiSecurity\View\Helper\Identity',
-            'Can' => 'ZucchiSecurity\View\Helper\Can',
         ),
         'factories' => array(
             'loginform' => function($sm) {
                 $sl = $sm->getServiceLocator();
                 $helper = new ZucchiSecurity\View\Helper\LoginForm($sl->get('zucchisecurity.auth'));
                 return $helper;
-            }
+            },
+            'Can' => function($sm) {
+                $helper = new ZucchiSecurity\View\Helper\Can();
+                $helper->setServiceManager($sm);
+                return $helper;
+            },
         ),
     ),
     // default route
