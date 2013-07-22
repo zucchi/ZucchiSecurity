@@ -38,6 +38,7 @@ class SecurityEvent extends Event implements
     
     const EVENT_AUTHENTICATE       = 'zucchisecurity.authenticate';
     const EVENT_AUTH_POST          = 'zucchisecurity.authenticate.post';
+    const EVENT_AUTH_FAIL          = 'zucchisecurity.authenticate.fail';
     
     const EVENT_AUTHORISE       = 'zucchisecurity.authorise';
     const EVENT_AUTHORISED       = 'zucchisecurity.authorised';

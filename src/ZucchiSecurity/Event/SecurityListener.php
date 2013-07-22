@@ -323,6 +323,12 @@ class SecurityListener  implements
                 return $response;
                 
             } else if ($result && !$result->isValid()) {
+                $postEvent = new SecurityEvent();
+                $postEvent->setName(SecurityEvent::EVENT_AUTH_FAIL);
+                $postEvent->setTarget($result->entity);
+                $postEvent->setServiceManager($sm);
+                $em->trigger($postEvent);
+
                 $response = $event->getResponse();
                 $response->setStatusCode($response::STATUS_CODE_403);
             }
